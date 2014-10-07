@@ -24,7 +24,7 @@ NUMBERS = [
         '+47XXXXXXXX'
         ]
 
-# email addresses in case of twilio failing
+# email adresses in case of twilio failing
 EMAILS = [
         'you@domain.com',
         'you2@domain.com'
@@ -44,8 +44,9 @@ for number in NUMBERS:
             to=number,
             body=MESSAGE)
     except TwilioRestException as err:
-        # error handling, send error message to all in EMAILS
-        body = ('Msg: ' + err.msg + '\n'
+        # error handling, send error message to adresses in EMAILS
+        body = ('Message: ' + MESSAGE + '\n'
+                'Twilio error message: ' + err.msg + '\n'
                 'Method: ' + err.method + '\n'
                 'Status: ' + str(err.status) + '\n'
                 'Uri: ' + err.uri)
@@ -53,7 +54,7 @@ for number in NUMBERS:
         msg['Subject'] = 'Twilio Error'
         msg['From'] = FROM_EMAIL
         s = smtplib.SMTP(SMTP_SERVER)
-        for address in EMAILS:
-            msg['To'] = address
-        s.sendmail(FROM_EMAIL, address, msg.as_string())
+        for adress in EMAILS:
+            msg['To'] = adress
+        s.sendmail(FROM_EMAIL, adress, msg.as_string())
         s.quit()
