@@ -47,7 +47,7 @@ for number in NUMBERS:
         # error handling, send error message to all in EMAILS
         body = ('Status: ' + err.status + '\n'
                 'Uri:' + err.uri + '\n'
-                'Code:' + err.code + '\n'
+                'Code:' + str(err.code) + '\n'
                 'Msg:' + err.msg)
         msg = MIMEText(body)
         msg['Subject'] = 'Twilio Error'
