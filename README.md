@@ -19,6 +19,7 @@ easy_install twilio
 Get and edit alert script:
 ```
 curl -k https://raw.githubusercontent.com/arve0/yun-fire-alert/master/sms_alert.py > sms_alert.py
+chmod +x sms_alert.py
 vim sms_alert.py
 ```
 
