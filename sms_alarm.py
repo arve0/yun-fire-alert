@@ -3,7 +3,7 @@
 '''
 Send an SMS alert through Twilio.
 '''
-from twilio import TwilioRestException
+from twilio.rest.exceptions import TwilioRestException
 from twilio.rest import TwilioRestClient
 import smtplib
 from email.mime.text import MIMEText
