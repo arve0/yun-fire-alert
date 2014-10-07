@@ -45,7 +45,7 @@ for number in NUMBERS:
             body=MESSAGE)
     except TwilioRestException as err:
         # error handling, send error message to all in EMAILS
-        body = ('Status: ' + err.status + '\n'
+        body = ('Status: ' + str(err.status) + '\n'
                 'Uri:' + err.uri + '\n'
                 'Code:' + str(err.code) + '\n'
                 'Msg:' + err.msg)
