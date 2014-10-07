@@ -3,6 +3,7 @@
 """
 Send an SMS alert through Twilio.
 """
+from twilio import TwilioRestException
 from twilio.rest import TwilioRestClient
 
 # put your own credentials here
@@ -23,8 +24,10 @@ client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 
 # send SMSes
 for number in NUMBERS:
-    client.messages.create(
+    try:
+        client.messages.create(
             from_=FROM_NUMBER,
             to=number,
-            body=MESSAGE
-    )
+            body=MESSAGE)
+    except TwilioRestException as err:
+        print(err)
