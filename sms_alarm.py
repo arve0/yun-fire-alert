@@ -45,7 +45,11 @@ for number in NUMBERS:
             body=MESSAGE)
     except TwilioRestException as err:
         # error handling, send error message to all in EMAILS
-        msg = MIMEText(err.msg)
+        body = ('Status: ' + err.status + '\n'
+                'Uri:' + err.uri + '\n'
+                'Code:' + err.code + '\n'
+                'Msg:' + err.msg)
+        msg = MIMEText(body)
         msg['Subject'] = 'Twilio Error'
         msg['From'] = FROM_EMAIL
         s = smtplib.SMTP(SMTP_SERVER)
@@ -53,4 +57,3 @@ for number in NUMBERS:
             msg['To'] = address
             s.sendmail(FROM_EMAIL, address, msg.as_string())
         s.quit()
-
