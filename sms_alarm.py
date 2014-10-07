@@ -55,5 +55,5 @@ for number in NUMBERS:
         s = smtplib.SMTP(SMTP_SERVER)
         for address in EMAILS:
             msg['To'] = address
-            s.sendmail(FROM_EMAIL, address, msg.as_string())
+        s.sendmail(FROM_EMAIL, address, msg.as_string())
         s.quit()
