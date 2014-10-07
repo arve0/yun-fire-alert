@@ -3,11 +3,6 @@
 '''
 Send an SMS alert through Twilio.
 '''
-from twilio.rest.exceptions import TwilioRestException
-from twilio.rest import TwilioRestClient
-import smtplib
-from email.mime.text import MIMEText
-
 
 # put your own credentials here
 ACCOUNT_SID = ''
@@ -33,7 +28,15 @@ EMAIL_ADRESSES = [
 # alert message
 MESSAGE = 'Fire alarm alert!'
 
+# No edit beyond this point should be necessary unless you want to change the
+# behaviour of this script!
+
 # setup
+from twilio.rest.exceptions import TwilioRestException
+from twilio.rest import TwilioRestClient
+import smtplib
+from email.mime.text import MIMEText
+
 client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 
 # send SMSes
