@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 '''
+yun-fire-alert
+Author: Arve Seljebu
+Code: https://github.com/arve0/yun-fire-alert
+
 SMS alert through Twilio.
 
 Usage: ./sms_alert.py fire|failure|ok|test
@@ -56,6 +60,13 @@ client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 
 # send SMSe
 def smsAlert(message, numbers):
+    """Send SMS alert through twilio.
+
+    :param str message: message to send
+    :param list numbers: string of receiving numbers, including country code
+    :return: none
+    """
+
     for number in numbers:
         try:
             client.messages.create(
@@ -79,7 +90,7 @@ def smsAlert(message, numbers):
             print('Twilio error: ' + err.msg)
             exit(1)
         else:
-            print('Alert sent to ' + ', '.join(numbers))
+            print('Alert sent to ' + number)
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
