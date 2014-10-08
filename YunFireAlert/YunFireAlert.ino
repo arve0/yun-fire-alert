@@ -70,7 +70,7 @@ byte getState(){
     return OK;
 }
 
-void smsAlert(string type){
+void smsAlert(char type[]){
   // send SMS through twilio with sms_alert.py
   // type: "fire", "failure", "ok" or "test"
   Process p;
