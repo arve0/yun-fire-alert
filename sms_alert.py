@@ -80,7 +80,7 @@ def smsAlert(message, numbers):
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         if sys.argv[1] == 'fire':
-            smsAlert(FIRE_MESSAGE, ALARM_NUMBERS)
+            smsAlert(ALARM_MESSAGE, ALARM_NUMBERS)
         elif sys.argv[1] == 'failure':
             smsAlert(FAILURE_MESSAGE, NUMBERS)
         elif sys.argv[1] == 'test':
