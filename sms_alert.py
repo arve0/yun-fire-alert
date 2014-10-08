@@ -32,10 +32,10 @@ EMAIL_ADRESSES = [
         'you2@domain.com'
         ]
 
-# alert message
+# alarm message
 ALARM_MESSAGE = 'Fire alarm alert!'
 
-# alert message
+# failure message
 FAILURE_MESSAGE = 'Fire alarm failure.'
 
 # No edit beyond this point should be necessary unless you want to change the
@@ -75,7 +75,7 @@ def smsAlert(message, numbers):
             print('Twilio error: ' + err.msg)
             exit(1)
         else:
-            print('Alert sent to ' + ', '.join(NUMBERS))
+            print('Alert sent to ' + ', '.join(numbers))
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
