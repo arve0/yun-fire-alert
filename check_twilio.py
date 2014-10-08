@@ -9,8 +9,8 @@ Check if we got connection to Twilio API.
 """
 import httplib2, os
 
-# use bundled certificate file
-http = httplib2.Http(ca_certs=os.path.abspath('cacert.pem'))
+# use bundled certificate file - full path = hacky, hack, better way?
+http = httplib2.Http(ca_certs=os.path.abspath('/root/cacert.pem'))
 http.follow_redirects = False
 
 try:
