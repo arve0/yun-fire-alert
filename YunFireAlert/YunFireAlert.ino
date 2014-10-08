@@ -1,7 +1,13 @@
-/* TODO */
+/* 
+yun-fire-alert
+Author: Arve Seljebu
+Code: https://github.com/arve0/yun-fire-alert
 
+Check inputs and alert upon fire alarm or failure.
+*/
 #include <Bridge.h>
 #include <Console.h>
+#include <Process.h>
 #include "MsTimer2.h"
 
 // pins
@@ -11,71 +17,94 @@ const byte failOutPin = 4;
 const byte statusPin = 13;
 
 void setup() {
+  // relay normally open with external pullup
+  pinMode(failOutPin, OUTPUT);
+  // set failure upon upstart
+  digitalWrite(failOutPin, HIGH);
+  blink(1000);
   // external pullup
   pinMode(firePin, INPUT);
   // internal pullup
   pinMode(failInPin, INPUT_PULLUP);
-  // relay normally open with external pullup
-  pinMode(failOutPin, OUTPUT);
   // internal LED
   pinMode(statusPin, OUTPUT);
 
   Bridge.begin();
   Console.begin();
-  Console.println("console started");
 }
 
-void toggleLed() {
-  // change output of led
+void toggleStatus() {
+  // toggle statusPin
   static byte out = HIGH;
   digitalWrite(statusPin, out);
   out = !out;
 }
 
+void blink(unsigned int period){
+  if (period == 0){
+    MsTimer2::stop();
+    digitalWrite(statusPin, LOW);
+  }
+  else {
+    MsTimer2::stop();
+    MsTimer2::set(period, toggleStatus);
+    MsTimer2::start();
+  }
+}
+
 // status codes
-const byte ALARM = 0;
+const byte FIRE = 0;
 const byte FAILURE = 1;
-const byte FAILURE_INTERNET = 2;
-const byte FAILURE_TWILIO = 3;
 const byte OK = 10;
 
 byte getState(){
   // Get current state and return it.
-  // FAILURE_INTERNET: failure internet - TODO
-  // FAILURE_TWILIO: failure twilio   - TODO
   byte fire = digitalRead(firePin);
   byte failure = digitalRead(failInPin);
   delay(50); // debounce
-  if (fire == 1 && digitalRead(firePin) == 1) return ALARM;
-  else if (failure == 0 && digitalRead(failInPin) == 0) return FAILURE;
-  else return OK;
+  if (fire == 1 && digitalRead(firePin) == 1)
+    return FIRE;
+  else if (failure == 0 && digitalRead(failInPin) == 0)
+    return FAILURE;
+  else
+    return OK;
+}
+
+void smsAlert(){
+  Process p;
+  p.begin("/root/sms_alert.py");
+  p.run();
+  while (p.available()>0){
+    char c = p.read();
+    Console.write(c);
+  }
+  Console.flush();    
 }
 
 void loop() {
-  static byte currentState;
-  static byte previousState = 10;
+  // initial states
+  static byte currentState = OK;
+  static byte previousState = OK;
+
   // get current state
   currentState = getState();
   if (currentState != previousState) {
     switch (currentState) {
-      case ALARM:
-        Console.println("BRANN");
-        MsTimer2::stop();
-        MsTimer2::set(100, toggleLed);
-        MsTimer2::start();
+      case FIRE:
+        blink(100);
+        Console.println("FIRE ALARM!");
+        smsAlert();
         break;
   
       case FAILURE:
-        Console.println("FEIL");
-        MsTimer2::stop();
-        MsTimer2::set(1000, toggleLed);
-        MsTimer2::start();
+        blink(1000);
+        Console.println("FIRE ALARM FAILURE");
+        // TODO
         break;
   
       case OK:
+        blink(0);
         Console.println("OK");
-        MsTimer2::stop();
-        digitalWrite(statusPin, LOW);
     } // end switch state
   } // end if state change
   previousState = currentState;
