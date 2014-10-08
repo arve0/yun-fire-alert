@@ -70,9 +70,12 @@ byte getState(){
     return OK;
 }
 
-void smsAlert(){
+void smsAlert(string type){
+  // send SMS through twilio with sms_alert.py
+  // type: "fire", "failure", "ok" or "test"
   Process p;
   p.begin("/root/sms_alert.py");
+  p.addParameter(type);
   p.run();
   while (p.available()>0){
     char c = p.read();
@@ -93,18 +96,19 @@ void loop() {
       case FIRE:
         blink(100);
         Console.println("FIRE ALARM!");
-        smsAlert();
+        smsAlert("fire");
         break;
   
       case FAILURE:
         blink(1000);
         Console.println("FIRE ALARM FAILURE");
-        // TODO
+        smsAlert("failure");
         break;
   
       case OK:
         blink(0);
         Console.println("OK");
+        smsAlert("ok");
     } // end switch state
   } // end if state change
   previousState = currentState;

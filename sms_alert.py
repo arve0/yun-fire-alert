@@ -3,8 +3,9 @@
 '''
 SMS alert through Twilio.
 
-Usage: ./sms_alert.py (fire|failure|test)
+Usage: ./sms_alert.py fire|failure|ok|test
 '''
+USAGE = '''Usage: {} fire|failure|ok|test'''.format(sys.argv[0])
 
 # put your twilio credentials here
 ACCOUNT_SID = ''
@@ -37,6 +38,9 @@ ALARM_MESSAGE = 'Fire alarm alert!'
 
 # failure message
 FAILURE_MESSAGE = 'Fire alarm failure.'
+
+# OK message
+OK_MESSAGE = 'Fire alarm returned to normal operation.'
 
 # No edit beyond this point should be necessary unless you want to change the
 # behaviour of this script!
@@ -83,9 +87,11 @@ if __name__ == '__main__':
             smsAlert(ALARM_MESSAGE, ALARM_NUMBERS)
         elif sys.argv[1] == 'failure':
             smsAlert(FAILURE_MESSAGE, NUMBERS)
+        elif sys.argv[1] == 'ok':
+            smsAlert(OK_MESSAGE, NUMBERS)
         elif sys.argv[1] == 'test':
             smsAlert('This is an test from sent from yun-fire-alert.', NUMBERS)
         else:
-            print('''Usage: [fire|failure|test]'''.format(sys.argv[0]))
+            print(USAGE)
     else:
-        print('''Usage: [fire|failure|test]'''.format(sys.argv[0]))
+        print(USAGE)
