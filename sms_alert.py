@@ -5,7 +5,6 @@ SMS alert through Twilio.
 
 Usage: ./sms_alert.py fire|failure|ok|test
 '''
-USAGE = '''Usage: {} fire|failure|ok|test'''.format(sys.argv[0])
 
 # put your twilio credentials here
 ACCOUNT_SID = ''
@@ -52,6 +51,7 @@ import smtplib
 from email.mime.text import MIMEText
 import sys
 
+USAGE = '''Usage: {} fire|failure|ok|test'''.format(sys.argv[0])
 client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 
 # send SMSe
