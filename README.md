@@ -21,3 +21,13 @@ opkg update
 opkg install python-openssl python-expat distribute
 easy_install twilio
 ```
+
+Make sure 32u4 is restarted when linux is booted:
+```
+sed -i "" "s/^#reset-mcu/reset-mcu/" /etc/rc.local
+```
+
+Install MsTimer2 arduino library:
+```
+git clone https://github.com/PaulStoffregen/MsTimer2 ~/Documents/Arduino/libraries/MsTimer2
+```
