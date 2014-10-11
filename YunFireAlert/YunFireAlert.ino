@@ -8,8 +8,8 @@ Check inputs and alert upon fire alarm or failure.
 #include <Bridge.h>
 #include <Console.h>
 #include <Process.h>
-#include "MsTimer2.h"
-
+#include <String.h>
+#include <MsTimer2.h>
 
 /*
  * Variables
@@ -22,6 +22,7 @@ const byte statusPin = 13;
 // status codes
 const byte FIRE = 0;
 const byte FAILURE = 1;
+const byte FAILURE_YUN = 2;
 const byte OK = 10;
 
 
@@ -64,6 +65,10 @@ byte getState(){
     return FIRE;
   else if (failure == 0 && digitalRead(failInPin) == 0)
     return FAILURE;
+//  else if (Bridge.isOk() != true) {
+//    Console.println("bridge not ok");
+//    return FAILURE_YUN;
+//  }
   else
     return OK;
 }
@@ -89,6 +94,8 @@ byte checkTwilio(){
    *
    * :return: exit code python script
    */
+//  if (Bridge.isOk() == false)
+//    return -1;
   Process p;
   p.begin("/root/check_twilio.py");
   p.run();
@@ -111,7 +118,7 @@ void setup() {
   // relay normally open with external pullup
   pinMode(failOutPin, OUTPUT);
   // set failure upon upstart
-  digitalWrite(failOutPin, HIGH);
+  digitalWrite(failOutPin, LOW);
   blink(1000);
   // external pullup
   pinMode(firePin, INPUT);
@@ -124,14 +131,14 @@ void setup() {
   Console.begin();
   while (checkTwilio() != 0) {
     Console.println("Waiting for internet connection to Twilio.");
-    delay(1000);
+    delay(10000);
   }
 }
 
 void loop() {
   // initial state (previous FAILURE -> send OK alert upon start)
   static byte currentState = OK;
-  static byte previousState = FAILURE;
+  static byte previousState = FAILURE_YUN;
 
   // get current state
   currentState = getState();
@@ -139,18 +146,27 @@ void loop() {
     switch (currentState) {
       case FIRE:
         blink(100);
+        digitalWrite(failOutPin, HIGH);
         Console.println("FIRE ALARM!");
         smsAlert("fire");
         break;
   
       case FAILURE:
         blink(1000);
+        digitalWrite(failOutPin, HIGH);
         Console.println("FIRE ALARM FAILURE");
         smsAlert("failure");
         break;
   
+      case FAILURE_YUN:
+        blink(500);
+        digitalWrite(failOutPin, LOW);
+        Console.println("YUN FAILURE");
+        break;
+
       case OK:
         blink(0);
+        digitalWrite(failOutPin, HIGH);
         Console.println("OK");
         smsAlert("ok");
     } // end switch state
