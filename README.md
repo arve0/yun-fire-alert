@@ -32,5 +32,13 @@ Install MsTimer2 arduino library:
 git clone https://github.com/PaulStoffregen/MsTimer2 ~/Documents/Arduino/libraries/MsTimer2
 ```
 
-# Diagram #
+# Images #
+
+## Drawing
 ![Diagram drawing](images/drawing.png "Diagram drawing")
+
+## Programming
+![Programming](images/programming.jpg "Powered with usb")
+
+## First live test
+![Wires everywhere](images/testing.jpg "A mess")
